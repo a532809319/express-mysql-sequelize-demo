@@ -1,0 +1,19 @@
+{
+  "name": "rouduoduo_demo",
+  "version": "0.0.1",
+  "description": "just a demo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "supervisor app.js"
+  },
+  "author": "onlyling",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "express": "^4.10.2",
+    "express-myconnection": "^1.0.4",
+    "mysql": "^2.5.3",
+    "sequelize": "^3.23.6"
+  }
+}
