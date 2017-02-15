@@ -1,42 +1,55 @@
-'use strict';
+const express = require('express')
+// 使用 GZIP 中间件合并请求
+const compression = require('compression')
+// session
+const expressSession = require('express-session')
 
-var express = require('express'),
-	// mysql = require('mysql'),
-	// myConnection = require('express-myconnection'),
-	bodyParser = require('body-parser'),
-	session = require('express-session'),
-	routesAdmin = require('./routes/admin');
+const bodyParser = require('body-parser')
 
-var app = express(),
-	dbOptions = {
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		port: 3306,
-		database: 'mai'
-	};
+const cookieParser = require('cookie-parser')
 
-// app.use(myConnection(mysql, dbOptions, 'single'));
+// log4js
+let log4js = require('log4js')
 
-app.use(bodyParser.urlencoded({ extended: false }));
+log4js.configure({
+    appenders: [{
+        type: 'console'
+    }, {
+        type: 'dateFile',
+        filename: './logs/cheese.log',
+        pattern: '-yyyy-MM-dd',
+        category: 'cheese'
+    }]
+})
 
-app.use(bodyParser.json());
+let app = express()
 
-app.use(session({
-	secret: 'OnlyLingStudio',
-	resave: false,
-	saveUninitialized: true
-}));
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 
-function errorHandler(err, req, res, next) {
-	res.status(500).json('出错了，你说怎么办');
-}
+app.use(bodyParser.json())
 
-app.use('/admin', routesAdmin);
+app.use(cookieParser())
 
-//configure the port number using and environment number
-var portNumber = process.env.CRUD_PORT_NR || 3000;
-//start everything up
-app.listen(portNumber, function() {
-	console.log('Create, Read, Update, and Delete (CRUD) example server listening on:', portNumber);
-});
+app.use(expressSession({
+    secret: 'BornSoft',
+    resave: false,
+    saveUninitialized: true
+}))
+
+app.use(log4js.connectLogger(log4js.getLogger('cheese'), {
+    level: log4js.levels.INFO
+}))
+
+app.use(compression())
+
+// 路由
+let apiLogger = log4js.getLogger('cheese')
+apiLogger.setLevel('INFO')
+
+app.use('/api', require('./routes/api')(express.Router(), apiLogger))
+
+app.listen(3000, () => {
+    console.log('127.0.0.1:3000')
+})

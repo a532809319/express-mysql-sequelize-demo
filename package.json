@@ -1,19 +1,24 @@
 {
-  "name": "rouduoduo_demo",
+  "name": "server",
   "version": "0.0.1",
-  "description": "just a demo",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "supervisor app.js"
   },
-  "author": "onlyling",
+  "author": "",
   "license": "ISC",
+  "devDependencies": {
+  },
   "dependencies": {
-    "body-parser": "^1.9.2",
-    "express": "^4.10.2",
-    "express-myconnection": "^1.0.4",
-    "mysql": "^2.5.3",
-    "sequelize": "^3.23.6"
+    "body-parser": "^1.16.0",
+    "cookie-parser": "^1.4.3",
+    "compression": "^1.6.2",
+    "express": "^4.14.1",
+    "express-session": "^1.15.0",
+    "log4js": "^1.1.0",
+    "mysql": "^2.13.0",
+    "sequelize": "^3.30.1"
   }
 }

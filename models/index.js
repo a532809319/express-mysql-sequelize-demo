@@ -1,36 +1,32 @@
-'use strict';
+var Sequelize = require('sequelize')
+var sequelize = new Sequelize('born', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql',
+    port: 3306,
+    timezone: '+08:00'
+})
 
-// var fs = require('fs');
-// var path = require('path');
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('mai', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3306
-});
+var fs = require('fs')
+var path = require('path')
 
-var db = {};
+var db = {}
 
-db.adminUser = require('./adminUser')(sequelize, Sequelize);
-db.user = require('./user')(sequelize, Sequelize);
+fs.readdirSync(__dirname)
+    .filter((file) => {
+        return (file.indexOf('.') !== 0 ) && (file !== 'index.js')
+    })
+    .forEach((file, i) => {
+        let modal = sequelize.import(path.join(__dirname, file))
+        db[modal.name] = modal
+    })
 
-// fs
-//   .readdirSync(__dirname)
-//   .filter(function(file) {
-//     return (file.indexOf('.') !== 0) && (file !== 'index.js');
-//   })
-//   .forEach(function(file) {
-//     var model = sequelize.import(path.join(__dirname, file));
-//     db[model.name] = model;
-//   });
+Object.keys(db).forEach((modelName) => {
+    if('associate' in db[modelName]) {
+        db[modelName].associate(db)
+    }
+})
 
-// Object.keys(db).forEach(function(modelName) {
-//   if ('associate' in db[modelName]) {
-//     db[modelName].associate(db);
-//   }
-// });
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
+module.exports = db
